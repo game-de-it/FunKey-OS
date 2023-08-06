@@ -3,6 +3,9 @@
 # Uncomment the following line to get debug info
 #set -x
 
+export LANG=ja_JP.UTF-8
+export LC_CTYPE=ja_JP.UTF-8
+
 # Check args
 if [ ${#} -ne 0 ]; then
     echo "Usage: $(basename ${0})"
@@ -19,11 +22,9 @@ touch "${LOCK_FILE}"
 
 # Increment name and save snapshot
 SNAPSHOT_EXT=PNG
-SNAPSHOT_DIR=/mnt/FunKey/snapshots
-mkdir -p "${SNAPSHOT_DIR}"
-last=$(cd ${SNAPSHOT_DIR}; ls IMG_*.${SNAPSHOT_EXT} 2> /dev/null | tail -1 | sed 's/^IMG_0*\([0-9]\+\)\.'${SNAPSHOT_EXT}'$/\1/')
-let last=${last}+1
-snapshot_file=$(printf "IMG_%04d.${SNAPSHOT_EXT}" $last)
+EXT=` ps -efHwww | grep opkrun| grep -v grep |awk -F. '{ print $NF }'`
+SNAPSHOT_DIR=`ps -efH | grep opkrun| grep -v grep |awk -F/ '{ print "/"$5"/"$6 }'`
+snapshot_file="`pgrep -a opkrun |awk -F/ '{ print $NF }'|awk -F/ '{ print $NF }'|awk -F.${EXT} '{ print $1 }'`.png"
 notif set 2 "   SCREENSHOT ${snapshot_file}"
 fbgrab "${SNAPSHOT_DIR}/${snapshot_file}" >/dev/null 2>&1 &
 
