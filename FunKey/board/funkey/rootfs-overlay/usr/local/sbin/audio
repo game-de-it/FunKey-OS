@@ -12,6 +12,7 @@ while true; do
 		fi
 		if [ ${usb_audio_out} -eq 1 ]; then
 			usb_audio_out=0
+			/usr/local/sbin/volume set $(/usr/local/sbin/volume get)
 		fi
 	else
 #		if [ "$(cat ${CARD1_NAME})" == "KMHIFI384KHZ" ]; then
